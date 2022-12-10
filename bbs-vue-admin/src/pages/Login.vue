@@ -63,7 +63,7 @@ export default {
           {
             min: 4,
             max: 20,
-            message: "长度在 4 到 20 个字符",
+            message: "长度在 4 到 16 个字符之间",
             trigger: "blur",
           },
         ],
@@ -117,6 +117,9 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  -moz-box-shadow:2px 2px 10px rgb(0, 16, 33);
+  -webkit-box-shadow:2px 2px 10px rgb(0, 16, 33);
+  box-shadow:2px 2px 10px rgb(0, 16, 33);
 
   .avatar_box {
     height: 130px;
