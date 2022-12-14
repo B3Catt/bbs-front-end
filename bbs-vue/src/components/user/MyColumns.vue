@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import request from "@/utils/request";
+
 export default {
   data() {
     return {
@@ -84,7 +86,7 @@ export default {
   },
   methods: {
     async getColumnList() {
-      const { data: res } = await this.$http.get("column/myColumnList", {
+      const res= request.get("column/myColumnList", {
         params: this.queryInfo,
       })
       if (res.code !== 200) return this.$message.error(res.msg)

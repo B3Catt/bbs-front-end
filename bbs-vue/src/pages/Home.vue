@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { removeToken, getToken } from "@/utils/auth"
+import { removeToken, getToken, setToken } from "@/utils/auth"
 import leftSide from "../components/LeftSide.vue"
 
 export default {
@@ -48,8 +48,8 @@ export default {
     }
   },
   created() {
-    if (getToken) {
-      isLogin = true
+    if (getToken()) {
+      this.isLogin = true
     }
   },
   methods: {

@@ -24,12 +24,6 @@
             ></el-button>
           </el-input>
         </el-col>
-        <!-- 添加按钮 -->
-        <el-col :span="4">
-          <el-button type="primary" @click="addDialogVisible = true"
-            >添加板块</el-button
-          >
-        </el-col>
       </el-row>
       <!-- 板块列表区域 -->
       <el-table :data="boardList" style="width: 100%" border stripe>
@@ -61,6 +55,8 @@
 </template>
 
 <script>
+import request from "@/utils/request";
+
 export default {
   data() {
     return {
@@ -79,13 +75,14 @@ export default {
     this.getBoardList()
   },
   methods: {
-    async getBoardList() {
-      const { data: res } = await this.$http.get("board/getBoardList", {
+    getBoardList() {
+      request.get("board/getBoardList", {
         params: this.queryInfo,
+      }).then(res => {
+        if (res.code !== 200) return this.$message.error(res.msg)
+        this.boardList = res.data.rows
+        this.total = res.data.total
       })
-      if (res.code !== 200) return this.$message.error(res.msg)
-      this.boardList = res.data.rows
-      this.total = res.data.total
     },
     // 监听 pageSize 改变的事件
     handleSizeChange(newPageSize) {
@@ -96,10 +93,6 @@ export default {
     handleCurrentChange(newPageNum) {
       this.queryInfo.pageNum = newPageNum
       this.getBoardList()
-    },
-    // 监听对话框关闭事件
-    addDialogClose() {
-      this.$refs.addFormRef.resetFields()
     },
   },
 }
