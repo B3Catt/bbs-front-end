@@ -16,24 +16,45 @@
         <el-table-column prop="content" label="内容"> </el-table-column>
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
-            <el-button
-              type="danger"
-              icon="el-icon-delete"
-              size="mini"
-              @click="deleteFloor(scope.row.id)"
-            ></el-button>
+            <!-- 删除按钮 -->
+            <el-popconfirm
+              confirm-button-text="确定"
+              cancel-button-text="我再想想"
+              icon="el-icon-info"
+              icon-color="red"
+              title="确定删除该楼层吗？"
+              @comfirm="deleteFloor(scope.row.id)"
+            >
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                slot="reference"
+              ></el-button>
+            </el-popconfirm>  
+            <!-- 审核通过按钮 -->
             <el-tooltip
               effect="dark"
               content="审核通过"
               placement="top"
               :enterable="false"
             >
-              <el-button
-                type="success"
-                icon="el-icon-success"
-                size="mini"
-                @click="auditFloor(scope.row.id)"
-              ></el-button>
+              <el-popconfirm
+                confirm-button-text="确定"
+                cancel-button-text="我再想想"
+                icon="el-icon-info"
+                icon-color="red"
+                title="确定审核通过吗？"
+                @comfirm="auditFloor(scope.row.id)"
+                class="ml-10"
+              >
+                <el-button
+                  type="success"
+                  icon="el-icon-success"
+                  size="mini"
+                  slot="reference"
+                ></el-button>
+              </el-popconfirm>
             </el-tooltip>
           </template>
         </el-table-column>

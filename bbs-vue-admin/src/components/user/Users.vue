@@ -35,18 +35,30 @@
         <el-table-column prop="userEmail" label="邮箱"> </el-table-column>
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
+            <!-- 查看详情按钮 -->
             <el-button
               type="primary"
               icon="el-icon-search"
               size="mini"
               @click="getUserInfo(scope.row.id)"
             ></el-button>
-            <el-button
-              type="danger"
-              icon="el-icon-delete"
-              size="mini"
-              @click="deleteUser(scope.row.id)"
-            ></el-button>
+            <!-- 删除按钮 -->
+            <el-popconfirm
+              confirm-button-text="确定"
+              cancel-button-text="我再想想"
+              icon="el-icon-info"
+              icon-color="red"
+              title="确定删除该专栏吗？"
+              @comfirm="deleteUser(scope.row.id)"
+              class="ml-10"
+            >
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                slot="reference"
+              ></el-button>
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>

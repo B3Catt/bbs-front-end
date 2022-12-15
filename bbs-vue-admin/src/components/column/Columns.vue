@@ -43,30 +43,53 @@
         </el-table-column>
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
+            <!-- 查看详情按钮 -->
             <el-button
               type="primary"
               icon="el-icon-search"
               size="mini"
               @click="getColumnInfo(scope.row.id)"
             ></el-button>
-            <el-button
-              type="danger"
-              icon="el-icon-delete"
-              size="mini"
-              @click="deleteColumn(scope.row.id)"
-            ></el-button>
+            <!-- 删除按钮 -->
+            <el-popconfirm
+              confirm-button-text="确定"
+              cancel-button-text="我再想想"
+              icon="el-icon-info"
+              icon-color="red"
+              title="确定删除该专栏吗？"
+              @comfirm="deleteColumn(scope.row.id)"
+              class="ml-10"
+            >
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                slot="reference"
+              ></el-button>
+            </el-popconfirm>
+            <!-- 审核通过按钮 -->
             <el-tooltip
               effect="dark"
               content="审核通过"
               placement="top"
               :enterable="false"
             >
-              <el-button
-                type="success"
-                icon="el-icon-success"
-                size="mini"
-                @click="auditColumn(scope.row.id)"
-              ></el-button>
+              <el-popconfirm
+                confirm-button-text="确定"
+                cancel-button-text="我再想想"
+                icon="el-icon-info"
+                icon-color="red"
+                title="确定审核通过吗？"
+                @comfirm="auditColumn(scope.row.id)"
+                style="margin-left: 10px"
+              >
+                <el-button
+                  type="success"
+                  icon="el-icon-success"
+                  size="mini"
+                  slot="reference"
+                ></el-button>
+              </el-popconfirm>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -91,7 +114,7 @@
       @close="addDialogClose()"
     >
       <!-- 内容主体区 -->
-      {{columnDetail}}
+      {{ columnDetail }}
       <!-- 底部区域 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="detailDialogVisible = false">关 闭</el-button>

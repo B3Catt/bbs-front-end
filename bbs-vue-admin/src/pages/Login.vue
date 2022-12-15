@@ -104,7 +104,7 @@ export default {
 
 <style lang="less" scoped>
 .login_container {
-  background-color: #2b4b6b;
+  background-image: linear-gradient(to bottom right, #FC466B, #3F5EFB);
   height: 100%;
 }
 

@@ -37,18 +37,30 @@
         <el-table-column prop="boardName" label="板块名"> </el-table-column>
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
+            <!-- 修改按钮 -->
             <el-button
               type="primary"
               icon="el-icon-edit"
               size="mini"
               @click="showEditDialog(scope.row)"
             ></el-button>
-            <el-button
-              type="danger"
-              icon="el-icon-delete"
-              size="mini"
-              @click="deleteBoard(scope.row.id)"
-            ></el-button>
+            <!-- 删除按钮 -->
+            <el-popconfirm
+              confirm-button-text="确定"
+              cancel-button-text="我再想想"
+              icon="el-icon-info"
+              icon-color="red"
+              title="确定删除该板块吗？"
+              @comfirm="deleteBoard(scope.row.id)"
+              class="ml-10"
+            >
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                slot="reference"
+              ></el-button>
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -241,6 +253,9 @@ export default {
         // 重新获取数据
         this.getBoardList()
       })
+    },
+    editDialogClose() {
+      this.$refs.editFormRef.resetFields()
     },
     // 删除板块
     async deleteBoard(id) {

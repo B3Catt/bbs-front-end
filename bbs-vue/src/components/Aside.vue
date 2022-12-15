@@ -20,26 +20,24 @@
       :default-active="activePath"
       router
     >
-      <!-- 1级菜单 -->
-      <el-submenu index="1">
-        <!-- 1级菜单的模板区 -->
-        <template slot="title">
+      <!-- 首页 -->
+      <el-menu-item index="/home">
+        <template>
+          <!-- 图表 -->
+          <i class="el-icon-s-home"></i>
+          <!-- 文本 -->
+          <span>首 页</span>
+        </template>
+      </el-menu-item>
+      <!-- 板块 -->
+      <el-menu-item index="/boards">
+        <template>
           <!-- 图表 -->
           <i class="el-icon-s-grid"></i>
           <!-- 文本 -->
-          <span>板块</span>
+          <span>板 块</span>
         </template>
-
-        <!-- 二级菜单项 -->
-        <el-menu-item index="/boards">
-          <template slot="title">
-            <!-- 图表 -->
-            <i class="el-icon-menu"></i>
-            <!-- 文本 -->
-            <span>板块列表</span>
-          </template>
-        </el-menu-item>
-      </el-submenu>
+      </el-menu-item>
 
       <!-- 1级菜单 -->
       <el-submenu index="2" v-if="isLogin">

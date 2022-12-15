@@ -8,8 +8,10 @@ body,
 }
 
 .el-breadcrumb {
-    margin-bottom: 15px;
+    margin-left: 10px;
     font-size: 12px;
+    display: inline-block;
+    font-size: 15px
 }
 
 .el-card {
