@@ -25,18 +25,10 @@
       <el-table-column prop="userName" label="发布者" width="180">
       </el-table-column>
       <el-table-column prop="title" label="标题"> </el-table-column>
-      <el-table-column prop="isTop" label="置顶" width="100">
+      <el-table-column label="操作" width="120">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.isTop"></el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="180">
-        <template slot-scope="scope">
-          <el-button
-            type="primary"
-            icon="el-icon-search"
-            size="mini"
-          ></el-button>
+          <el-button type="primary" icon="el-icon-link" size="mini"></el-button>
+          <el-button type="danger" icon="el-icon-close" size="mini"></el-button>
         </template>
       </el-table-column>
     </el-table>

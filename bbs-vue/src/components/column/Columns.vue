@@ -4,30 +4,38 @@
     <el-row :gutter="20">
       <el-col :span="7">
         <el-input
-          placeholder="请输入板块名字"
-          v-model="queryInfo.boardName"
+          placeholder="请输入专栏标题"
+          v-model="queryInfo.columnTitle"
           clearable
-          @clear="getBoardList"
+          @clear="getColumnList"
         >
           <el-button
             slot="append"
             icon="el-icon-search"
-            @click="getBoardList"
+            @click="getColumnList"
           ></el-button>
         </el-input>
       </el-col>
+      <!-- 添加按钮 -->
+      <el-col :span="4">
+        <el-button type="primary" @click="addColumn()">新建专栏</el-button>
+      </el-col>
     </el-row>
     <!-- 板块列表区域 -->
-    <el-table :data="boardList" style="width: 100%" border stripe>
+    <el-table :data="columnList" style="width: 100%" border stripe>
       <el-table-column type="index"> </el-table-column>
-      <el-table-column prop="boardName" label="板块名"> </el-table-column>
-      <el-table-column label="操作" width="65">
+      <el-table-column prop="title" label="标题"> </el-table-column>
+      <el-table-column prop="userName" label="发布者"> </el-table-column>
+      <el-table-column prop="createTime" label="发布时间"> </el-table-column>
+      <el-table-column prop="floorCount" label="楼层数"> </el-table-column>
+      <el-table-column prop="viewCount" label="浏览量"> </el-table-column>
+      <el-table-column label="操作" width="120">
         <template slot-scope="scope">
+          <el-button type="primary" icon="el-icon-link" size="mini"></el-button>
           <el-button
             type="primary"
-            icon="el-icon-link"
+            icon="el-icon-star-on"
             size="mini"
-            @click="getColumns(scope.row)"
           ></el-button>
         </template>
       </el-table-column>
@@ -55,47 +63,43 @@ export default {
       queryInfo: {
         pageNum: 1,
         pageSize: 2,
-        boardName: "",
+        boardId: 0,
+        columnTitle: "",
       },
-      boardList: [],
+      columnList: [],
       total: 0,
-      path: "",
     }
   },
   created() {
-    this.getBoardList()
+    this.queryInfo.boardId = this.$route.query.boardId
+    this.getColumnList()
   },
   methods: {
-    getBoardList() {
+    getColumnList() {
       request
-        .get("board/getBoardList", {
+        .get("column/columnList", {
           params: this.queryInfo,
         })
         .then((res) => {
           if (res.code !== 200) return this.$message.error(res.msg)
-          this.boardList = res.data.rows
+          this.columnList = res.data.rows
           this.total = res.data.total
         })
     },
     // 监听 pageSize 改变的事件
     handleSizeChange(newPageSize) {
       this.queryInfo.pageSize = newPageSize
-      this.getBoardList()
+      this.getColumnList()
     },
     // 监听 pageNum 改变的事件
     handleCurrentChange(newPageNum) {
       this.queryInfo.pageNum = newPageNum
-      this.getBoardList()
+      this.getColumnList()
     },
-    // 跳转到对应板块
-    getColumns(board) {
-      this.$router.push({
-        path: "/columns",
-        query: {
-          boardId: board.id,
-        },
-      })
-    },
+    // 新建专栏
+    addColumn() {
+      this.$router.push("addColumns")
+    }
   },
 }
 </script>

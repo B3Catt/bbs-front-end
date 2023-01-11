@@ -24,7 +24,8 @@
       <span>{{ userName }}</span>
       <i class="el-icon-arrow-down" style="margin-left: 15px"></i>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>个人信息</el-dropdown-item>
+        <el-dropdown-item @click.native="userInfo">个人信息</el-dropdown-item>
+        <el-dropdown-item @click.native="changePassword">修改密码</el-dropdown-item>
         <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -61,6 +62,12 @@ export default {
     },
     register() {
       this.$emit("register")
+    },
+    userInfo() {
+      this.$router.push("/userInfo")
+    },
+    changePassword() {
+      this.$emit("changePassword")
     }
   },
 }

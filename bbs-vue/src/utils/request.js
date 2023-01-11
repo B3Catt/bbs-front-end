@@ -10,7 +10,10 @@ const request = axios.create({
 // 可以自请求发送前对请求做一些处理
 // 比如统一加token，对请求参数统一加密
 request.interceptors.request.use(config => {
-    config.headers['token'] = getToken();  // 设置请求头
+    let token = getToken();
+    if (token) {
+        config.headers['token'] = token;  // 设置请求头
+    }
     return config
 }, error => {
     return Promise.reject(error)

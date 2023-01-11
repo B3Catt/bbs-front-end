@@ -6,6 +6,8 @@ import Boards from '../components/board/Boards.vue'
 import UserInfo from '../components/user/UserInfo.vue'
 import MyColumns from '../components/user/MyColumns.vue'
 import MyCollections from '../components/user/MyCollections'
+import Columns from '../components/column/Columns.vue'
+import AddColumn from '../components/column/AddColumn.vue'
 import { getToken } from '@/utils/auth'
 
 Vue.use(VueRouter)
@@ -51,6 +53,22 @@ const routes = [
           breadcrumbItems: ['个人中心', '我的收藏']
         },
         component: MyCollections
+      },
+      {
+        path: 'columns',
+        meta: {
+          breadcrumbShow: true,
+          breadcrumbItems: ['板块', '专栏']
+        },
+        component: Columns
+      },
+      {
+        path: 'addColumns',
+        meta: {
+          breadcrumbShow: true,
+          breadcrumbItems: ['板块', '专栏', '新建专栏']
+        },
+        component: AddColumn
       }
     ]
   }

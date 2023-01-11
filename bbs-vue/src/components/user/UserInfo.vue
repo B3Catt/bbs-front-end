@@ -152,6 +152,8 @@ export default {
           center: true,
         })
         this.isEdit = false
+        localStorage.setItem("userInfo", JSON.stringify(this.userInfoForm))
+        this.$emit("changeUserInfo")
       })
     },
   },

@@ -23,18 +23,29 @@
       <el-table-column prop="boardName" label="板块" width="180">
       </el-table-column>
       <el-table-column prop="title" label="标题"> </el-table-column>
-      <el-table-column prop="isTop" label="置顶" width="100">
+      <el-table-column prop="isPublish" label="是否发布" width="100">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.isTop"></el-switch>
+          {{ scope.row.isPublish ? "是" : "否" }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="180">
+      <el-table-column prop="isComment" label="允许评论" width="100">
+        <template slot-scope="scope">
+          {{ scope.row.isComment ? "是" : "否" }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="isAudit" label="是否通过审核" width="120">
+        <template slot-scope="scope">
+          {{ scope.row.isAudit ? "是" : "否" }}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="120">
         <template slot-scope="scope">
           <el-button
             type="primary"
-            icon="el-icon-search"
+            icon="el-icon-edit"
             size="mini"
           ></el-button>
+          <el-button type="primary" icon="el-icon-link" size="mini"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -80,7 +91,12 @@ export default {
           if (res.code !== 200) return this.$message.error(res.msg)
           this.columnList = res.data.rows
           // 将源数据中的字符串转为布尔值
-          this.columnList.map((column) => (column.isTop = !!+column.isTop))
+          this.columnList.map((column) => {
+            column.isTop = !!+column.isTop
+            column.isComment = !!+column.isComment
+            column.isPublish = !!+column.isPublish
+            column.isAudit = !!+column.isAudit
+          })
           this.total = res.data.total
         })
     },

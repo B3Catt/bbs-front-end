@@ -14,12 +14,13 @@
           @login="loginDialogVisible = true"
           @logout="logout"
           @register="registerDialogVisible = true"
+          @changePassword="changePasswordDialogVisible = true"
         />
       </el-header>
       <!-- 右侧内容主体 -->
       <el-main>
         <!-- 路由占位符 -->
-        <router-view />
+        <router-view @changeUserInfo="refreshUserInfo" />
       </el-main>
     </el-container>
 
@@ -126,6 +127,53 @@
         >
       </span>
     </el-dialog>
+    <!-- 进行修改密码的对话框 -->
+    <el-dialog
+      title="修改密码"
+      :visible.sync="changePasswordDialogVisible"
+      width="30%"
+      @close="changePasswordDialogClose()"
+    >
+      <!-- 内容主体区 -->
+      <el-form
+        :model="changePasswordForm"
+        :rules="changePasswordFormRules"
+        ref="changePasswordFormRef"
+        label-width="0"
+      >
+        <el-form-item prop="oldPassword">
+          <el-input
+            v-model="changePasswordForm.oldPassword"
+            prefix-icon="el-icon-lock"
+            type="password"
+            placeholder="原密码"
+          ></el-input>
+        </el-form-item>
+        <el-form-item prop="newPassword">
+          <el-input
+            v-model="changePasswordForm.newPassword"
+            prefix-icon="el-icon-lock"
+            type="password"
+            placeholder="请输入新密码"
+          ></el-input>
+        </el-form-item>
+        <el-form-item prop="judge">
+          <el-input
+            v-model="changePasswordForm.judge"
+            prefix-icon="el-icon-lock"
+            type="password"
+            placeholder="再次输入密码"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <!-- 底部区域 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="changePasswordDialogVisible = false"
+          >取 消</el-button
+        >
+        <el-button type="primary" @click="changePassword()">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -134,6 +182,7 @@ import request from "@/utils/request"
 import { removeToken, getToken, setToken } from "@/utils/auth"
 import Aside from "../components/Aside.vue"
 import Header from "../components/Header.vue"
+import qs from "qs"
 
 export default {
   components: {
@@ -155,6 +204,14 @@ export default {
     //   验证再次输入密码是否正确
     var checkJudge = (rule, value, callback) => {
       if (value !== this.registerForm.userPassword) {
+        // 两次密码不一样
+        return callback(new Error("两次输入密码不一致！"))
+      }
+      return callback()
+    }
+    //   验证修改密码的再次输入的新密码是否正确
+    var checkJudge2 = (rule, value, callback) => {
+      if (value !== this.changePasswordForm.newPassword) {
         // 两次密码不一样
         return callback(new Error("两次输入密码不一致！"))
       }
@@ -234,12 +291,47 @@ export default {
           { validator: checkEmail, trigger: "blur" },
         ],
       },
+      // 是否显示修改密码对话框
+      changePasswordDialogVisible: false,
+      // 这是修改密码表单的数据表单对象
+      changePasswordForm: {
+        oldPassword: "",
+        newPassword: "",
+        judge: "",
+      },
+      // 这是修改密码表单的映射规则对象
+      changePasswordFormRules: {
+        // 验证旧密码是否正确
+        oldPassword: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            min: 4,
+            max: 16,
+            message: "长度在 4 到 16 个字符之间",
+            trigger: "blur",
+          },
+        ],
+        // 验证新密码是否合法
+        newPassword: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          {
+            min: 4,
+            max: 16,
+            message: "长度在 4 到 16 个字符之间",
+            trigger: "blur",
+          },
+        ],
+        // 在次输入密码是否一致
+        judge: [
+          { required: true, message: "请再次输入密码", trigger: "blur" },
+          { validator: checkJudge2, trigger: "blur" },
+        ],
+      },
     }
   },
   created() {
     if (getToken()) {
-      this.isLogin = true
-      this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
+      this.refreshUserInfo()
     } else {
       this.isLogin = false
     }
@@ -305,26 +397,67 @@ export default {
     },
     // 注册
     register() {
-      request.post("user/register", this.registerForm).then((res) => {
-        // 判断是否成功
-        if (res.code !== 200) {
-          return this.$message.error({
+      this.$refs.registerFormRef.validate((valid) => {
+        if (!valid) return
+        request.post("user/register", this.registerForm).then((res) => {
+          // 判断是否成功
+          if (res.code !== 200) {
+            return this.$message.error({
+              message: res.msg,
+              center: true,
+            })
+          }
+          this.$message.success({
             message: res.msg,
             center: true,
           })
-        }
-        this.$message.success({
-          message: res.msg,
-          center: true,
+          // 成功之后跳转登录页面
+          this.loginDialogVisible = true
+          this.registerDialogVisible = false
         })
-        // 成功之后跳转登录页面
-        this.loginDialogVisible = true
-        this.registerDialogVisible = false
       })
     },
     // 监听注册对话框的关闭
     registerDialogClose() {
       this.$refs.registerFormRef.resetFields()
+    },
+    // 修改密码
+    changePassword() {
+      this.$refs.changePasswordFormRef.validate((valid) => {
+        if (!valid) return
+        let params = qs.stringify({
+          oldPassword: this.changePasswordForm.oldPassword,
+          newPassword: this.changePasswordForm.newPassword,
+        })
+        request.post("user/password", params).then((res) => {
+          // 判断是否成功
+          if (res.code !== 200) {
+            return this.$message.error({
+              message: res.msg,
+              center: true,
+            })
+          }
+          this.$message.success({
+            message: res.msg,
+            center: true,
+          })
+          this.changePasswordDialogVisible = false
+          // 重新登陆
+          removeToken()
+          localStorage.removeItem("userInfo")
+          this.isLogin = false
+          this.loginDialogVisible = true
+        })
+      })
+    },
+    // 监听修改密码表单的关闭
+    changePasswordDialogClose() {
+      this.$refs.changePasswordFormRef.resetFields()
+    },
+    // 更新用户信息
+    refreshUserInfo() {
+      this.isLogin = true
+      this.userInfo = JSON.parse(localStorage.getItem("userInfo"))
     },
   },
 }
