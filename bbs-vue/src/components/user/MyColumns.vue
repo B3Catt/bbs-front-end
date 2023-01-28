@@ -44,6 +44,7 @@
             type="primary"
             icon="el-icon-edit"
             size="mini"
+            @click="updateColumn(scope.row)"
           ></el-button>
           <el-button type="primary" icon="el-icon-link" size="mini"></el-button>
         </template>
@@ -109,6 +110,16 @@ export default {
     handleCurrentChange(newPageNum) {
       this.queryInfo.pageNum = newPageNum
       this.getColumnList()
+    },
+    // 修改专栏
+    updateColumn(column) {
+      this.$router.push({
+        path: "addColumns",
+        query: {
+          aId: column.id,
+          boardId: column.boardId
+        },
+      })
     },
   },
 }

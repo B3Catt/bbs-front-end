@@ -23,7 +23,7 @@
               icon="el-icon-info"
               icon-color="red"
               title="确定删除该楼层吗？"
-              @comfirm="deleteFloor(scope.row.id)"
+              @confirm="deleteFloor(scope.row.id)"
             >
               <el-button
                 type="danger"
@@ -45,7 +45,7 @@
                 icon="el-icon-info"
                 icon-color="red"
                 title="确定审核通过吗？"
-                @comfirm="auditFloor(scope.row.id)"
+                @confirm="auditFloor(scope.row.id)"
                 class="ml-10"
               >
                 <el-button

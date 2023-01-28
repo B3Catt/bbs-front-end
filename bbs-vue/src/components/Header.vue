@@ -11,9 +11,14 @@
         separator-class="el-icon-arrow-right"
         v-if="$route.meta.breadcrumbShow"
       >
-        <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item
-          v-for="item in $route.meta.breadcrumbItems"
+          v-for="item in $route.meta.toBreadcrumbItems"
+          :key="item.path"
+          :to="{ path: item.path }"
+          >{{ item.name }}</el-breadcrumb-item
+        >
+        <el-breadcrumb-item
+          v-for="item in $route.meta.constBreadcrumbItems"
           :key="item"
           >{{ item }}</el-breadcrumb-item
         >
@@ -25,7 +30,9 @@
       <i class="el-icon-arrow-down" style="margin-left: 15px"></i>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item @click.native="userInfo">个人信息</el-dropdown-item>
-        <el-dropdown-item @click.native="changePassword">修改密码</el-dropdown-item>
+        <el-dropdown-item @click.native="changePassword"
+          >修改密码</el-dropdown-item
+        >
         <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -68,7 +75,7 @@ export default {
     },
     changePassword() {
       this.$emit("changePassword")
-    }
+    },
   },
 }
 </script>

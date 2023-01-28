@@ -51,7 +51,7 @@
               icon="el-icon-info"
               icon-color="red"
               title="确定删除该板块吗？"
-              @comfirm="deleteBoard(scope.row.id)"
+              @confirm="deleteBoard(scope.row.id)"
               class="ml-10"
             >
               <el-button

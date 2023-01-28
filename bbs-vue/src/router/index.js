@@ -26,7 +26,13 @@ const routes = [
         path: 'boards',
         meta: {
           breadcrumbShow: true,
-          breadcrumbItems: ['板块', '板块列表']
+          constBreadcrumbItems: ['板块', '板块列表'],
+          toBreadcrumbItems: [
+            {
+              name: '首页',
+              path: '/home'
+            },
+          ]
         },
         component: Boards
       },
@@ -34,7 +40,13 @@ const routes = [
         path: 'userInfo',
         meta: {
           breadcrumbShow: true,
-          breadcrumbItems: ['个人中心', '个人信息']
+          constBreadcrumbItems: ['个人中心', '个人信息'],
+          toBreadcrumbItems: [
+            {
+              name: '首页',
+              path: '/home'
+            },
+          ]
         },
         component: UserInfo
       },
@@ -42,7 +54,13 @@ const routes = [
         path: 'myColumns',
         meta: {
           breadcrumbShow: true,
-          breadcrumbItems: ['个人中心', '我的专栏']
+          constBreadcrumbItems: ['个人中心', '我的专栏'],
+          toBreadcrumbItems: [
+            {
+              name: '首页',
+              path: '/home'
+            },
+          ]
         },
         component: MyColumns
       },
@@ -50,7 +68,13 @@ const routes = [
         path: 'myCollections',
         meta: {
           breadcrumbShow: true,
-          breadcrumbItems: ['个人中心', '我的收藏']
+          constBreadcrumbItems: ['个人中心', '我的收藏'],
+          toBreadcrumbItems: [
+            {
+              name: '首页',
+              path: '/home'
+            },
+          ]
         },
         component: MyCollections
       },
@@ -58,7 +82,17 @@ const routes = [
         path: 'columns',
         meta: {
           breadcrumbShow: true,
-          breadcrumbItems: ['板块', '专栏']
+          constBreadcrumbItems: ['专栏'],
+          toBreadcrumbItems: [
+            {
+              name: '首页',
+              path: '/home'
+            },
+            {
+              name: '板块',
+              path: '/boards'
+            }
+          ]
         },
         component: Columns
       },
@@ -66,7 +100,22 @@ const routes = [
         path: 'addColumns',
         meta: {
           breadcrumbShow: true,
-          breadcrumbItems: ['板块', '专栏', '新建专栏']
+          constBreadcrumbItems: ['新建专栏'],
+          toBreadcrumbItems: [
+            {
+              name: '首页',
+              path: '/home'
+            },
+            {
+              name: '板块',
+              path: '/boards'
+            },
+            
+            {
+              name: '专栏',
+              path: '/columns'
+            }
+          ]
         },
         component: AddColumn
       }

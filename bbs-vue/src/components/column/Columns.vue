@@ -98,8 +98,14 @@ export default {
     },
     // 新建专栏
     addColumn() {
-      this.$router.push("addColumns")
-    }
+      this.$router.push({
+        path: "addColumns",
+        query: {
+          aId: 0,
+          boardId: this.queryInfo.boardId
+        },
+      })
+    },
   },
 }
 </script>

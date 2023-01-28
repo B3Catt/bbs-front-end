@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="90px">
+    <el-form
+      ref="form"
+      :model="form"
+      :rules="formRules"
+      label-width="90px"
+    >
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="文章标题" prop="title">
@@ -27,6 +32,7 @@
         <mavon-editor ref="md" v-model="form.content" />
       </el-row>
     </el-form>
+
     <el-row :gutter="20">
       <el-col :span="12">
         <el-button type="primary" size="medium" @click="handleSubmit">{{
@@ -48,39 +54,76 @@ export default {
       form: {
         title: "",
         isComment: "1",
+        isPublish: "0",
         content: "",
+        boardId: -1
       },
       aId: -1,
+      // 这是表单的映射规则对象
+      formRules: {
+        // 验证标题是否合法
+        title: [
+          { required: true, message: "请输入标题", trigger: "blur" },
+          {
+            min: 6,
+            max: 40,
+            message: "长度在 4 到 16 个字符之间",
+            trigger: "blur",
+          },
+        ],
+      },
     }
   },
   created() {
-    this.aId = this.$route.query.aId
+    this.aId = parseInt(this.$route.query.aId)
+    this.boardId = this.$route.query.boardId
     if (this.aId) {
       this.getArticle()
     }
   },
   methods: {
-    getArticle() {},
+    getArticle() {
+      request
+        .get(`column/${this.aId}`, {
+          params: this.queryInfo,
+        })
+        .then((res) => {
+          if (res.code !== 200) return this.$message.error(res.msg)
+          this.form = res.data
+        })
+    },
     handleSave() {
-      this.form.status = "1"
-      addArticle(this.form).then((response) => {
-        this.$modal.msgSuccess("保存草稿成功")
+      this.form.isPublish = "0"
+      request.post("column/add", this.form).then((response) => {
+        this.$message.success({
+          message: "保存草稿成功",
+          center: true,
+        })
       })
     },
     handleSubmit() {
-      if (!this.aId) {
-        this.form.status = "0"
-        addArticle(this.form).then((response) => {
-          this.$modal.msgSuccess("博客发布成功")
-          this.$router.push({ path: "/content/article" })
-        })
-      } else {
-        // 更新博客信息
-        updateArticle(this.form).then((response) => {
-          this.$modal.msgSuccess("博客更新成功")
-          this.$router.push({ path: "/content/article" })
-        })
-      }
+      this.$refs.form.validate((valid) => {
+        if (!valid) return
+        if (!this.aId) {
+          this.form.isPublish = "1"
+          request.post("column/add", this.form).then((response) => {
+            this.$message.success({
+              message: "专栏发布成功",
+              center: true,
+            })
+            this.$router.push({ path: "/columns" })
+          })
+        } else {
+          // 更新博客信息
+          request.post("column/update", this.form).then((response) => {
+            this.$message.success({
+              message: "专栏更新成功",
+              center: true,
+            })
+            this.$router.push({ path: "/columns" })
+          })
+        }
+      })
     },
   },
 }

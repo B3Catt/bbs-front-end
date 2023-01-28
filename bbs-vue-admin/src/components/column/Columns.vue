@@ -57,7 +57,7 @@
               icon="el-icon-info"
               icon-color="red"
               title="确定删除该专栏吗？"
-              @comfirm="deleteColumn(scope.row.id)"
+              @confirm="deleteColumn(scope.row.id)"
               class="ml-10"
             >
               <el-button
@@ -80,7 +80,7 @@
                 icon="el-icon-info"
                 icon-color="red"
                 title="确定审核通过吗？"
-                @comfirm="auditColumn(scope.row.id)"
+                @confirm="auditColumn(scope.row.id)"
                 style="margin-left: 10px"
               >
                 <el-button
@@ -111,7 +111,6 @@
       title="专栏详情"
       :visible.sync="detailDialogVisible"
       width="50%"
-      @close="addDialogClose()"
     >
       <!-- 内容主体区 -->
       {{ columnDetail }}
@@ -208,6 +207,7 @@ export default {
     },
     // 审核通过
     async auditColumn(id) {
+      console.log(1)
       const { data: res } = await this.$http.put(`audit/column/${id}`)
       // 判断是否成功
       if (res.code !== 200) {
