@@ -25,7 +25,11 @@
     <el-table :data="columnList" style="width: 100%" border stripe>
       <el-table-column type="index"> </el-table-column>
       <el-table-column prop="title" label="标题"> </el-table-column>
-      <el-table-column prop="userName" label="发布者"> </el-table-column>
+      <el-table-column prop="userName" label="发布者">
+        <template slot-scope="scope">
+          <div style="cursor: pointer;" @click="getUserInfo(scope.row.userId)">{{scope.row.userName}}</div>
+        </template>
+      </el-table-column>
       <el-table-column prop="createTime" label="发布时间"> </el-table-column>
       <el-table-column prop="floorCount" label="楼层数"> </el-table-column>
       <el-table-column prop="viewCount" label="浏览量"> </el-table-column>
@@ -106,6 +110,15 @@ export default {
         },
       })
     },
+    // 查看用户信息
+    getUserInfo(userId) {
+      this.$router.push({
+        path: "/getUserInfo",
+        query: {
+          userId: userId,
+        },
+      })
+    }
   },
 }
 </script>

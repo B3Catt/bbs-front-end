@@ -8,6 +8,7 @@ import MyColumns from '../components/user/MyColumns.vue'
 import MyCollections from '../components/user/MyCollections'
 import Columns from '../components/column/Columns.vue'
 import AddColumn from '../components/column/AddColumn.vue'
+import UserInfoPage from '../components/user/UserInfoPage.vue'
 import { getToken } from '@/utils/auth'
 
 Vue.use(VueRouter)
@@ -49,6 +50,29 @@ const routes = [
           ]
         },
         component: UserInfo
+      },
+      {
+        path: 'getUserInfo',
+        meta: {
+          breadcrumbShow: true,
+          constBreadcrumbItems: ['查询个人信息'],
+          toBreadcrumbItems: [
+            {
+              name: '首页',
+              path: '/home'
+            },
+            {
+              name: '板块',
+              path: '/boards'
+            },
+            
+            {
+              name: '专栏',
+              path: '/columns'
+            }
+          ]
+        },
+        component: UserInfoPage
       },
       {
         path: 'myColumns',
