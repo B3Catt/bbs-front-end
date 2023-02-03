@@ -38,7 +38,7 @@
           {{ scope.row.isAudit ? "是" : "否" }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="120">
+      <el-table-column label="操作" width="180">
         <template slot-scope="scope">
           <el-button
             type="primary"
@@ -47,6 +47,24 @@
             @click="updateColumn(scope.row)"
           ></el-button>
           <el-button type="primary" icon="el-icon-link" size="mini"></el-button>
+
+          <!-- 删除按钮 -->
+          <el-popconfirm
+            confirm-button-text="确定"
+            cancel-button-text="我再想想"
+            icon="el-icon-info"
+            icon-color="red"
+            title="确定删除该专栏吗？"
+            @confirm="deleteColumn(scope.row)"
+            class="ml-10"
+          >
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              slot="reference"
+            ></el-button>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -117,9 +135,25 @@ export default {
         path: "addColumns",
         query: {
           aId: column.id,
-          boardId: column.boardId
+          boardId: column.boardId,
         },
       })
+    },
+    // 删除专栏
+    deleteColumn(column) {
+      request.delete(`column/delete/${column.id}`).then((res) => {
+        if (res.code !== 200) return this.$message.error(res.msg)
+        this.columnList = res.data.rows
+        // 将源数据中的字符串转为布尔值
+        this.columnList.map((column) => {
+          column.isTop = !!+column.isTop
+          column.isComment = !!+column.isComment
+          column.isPublish = !!+column.isPublish
+          column.isAudit = !!+column.isAudit
+        })
+        this.total = res.data.total
+      })
+      this.getColumnList()
     },
   },
 }

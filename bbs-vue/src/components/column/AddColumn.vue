@@ -65,9 +65,9 @@ export default {
         title: [
           { required: true, message: "请输入标题", trigger: "blur" },
           {
-            min: 6,
+            min: 4,
             max: 40,
-            message: "长度在 4 到 16 个字符之间",
+            message: "长度在 4 到 60 个字符之间",
             trigger: "blur",
           },
         ],
