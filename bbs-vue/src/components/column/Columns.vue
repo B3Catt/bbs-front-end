@@ -35,7 +35,7 @@
       <el-table-column prop="viewCount" label="浏览量"> </el-table-column>
       <el-table-column label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-link" size="mini"></el-button>
+          <el-button type="primary" icon="el-icon-link" size="mini" @click="columnDetail(scope.row.id)"></el-button>
           <el-button
             type="primary"
             icon="el-icon-star-on"
@@ -63,7 +63,7 @@ import request from "@/utils/request"
 export default {
   data() {
     return {
-      // 获取用户列表的参数对象
+      // 获取专栏列表的参数对象
       queryInfo: {
         pageNum: 1,
         pageSize: 2,
@@ -116,6 +116,15 @@ export default {
         path: "/getUserInfo",
         query: {
           userId: userId,
+        },
+      })
+    },
+    // 查看专栏详情
+    columnDetail(columnId) {
+      this.$router.push({
+        path: "/columnDetail",
+        query: {
+          columnId: columnId,
         },
       })
     }

@@ -46,8 +46,7 @@
             size="mini"
             @click="updateColumn(scope.row)"
           ></el-button>
-          <el-button type="primary" icon="el-icon-link" size="mini"></el-button>
-
+          <el-button type="primary" icon="el-icon-link" size="mini" @click="columnDetail(scope.row.id)"></el-button>
           <!-- 删除按钮 -->
           <el-popconfirm
             confirm-button-text="确定"
@@ -155,6 +154,15 @@ export default {
       })
       this.getColumnList()
     },
+    // 查看专栏详情
+    columnDetail(columnId) {
+      this.$router.push({
+        path: "/columnDetail",
+        query: {
+          columnId: columnId,
+        },
+      })
+    }
   },
 }
 </script>

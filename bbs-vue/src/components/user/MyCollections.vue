@@ -27,7 +27,7 @@
       <el-table-column prop="title" label="标题"> </el-table-column>
       <el-table-column label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-link" size="mini"></el-button>
+          <el-button type="primary" icon="el-icon-link" size="mini" @click="columnDetail(scope.row.id)"></el-button>
           <el-button type="danger" icon="el-icon-close" size="mini"></el-button>
         </template>
       </el-table-column>
@@ -88,6 +88,15 @@ export default {
       this.queryInfo.pageNum = newPageNum
       this.getColumnList()
     },
+    // 查看专栏详情
+    columnDetail(columnId) {
+      this.$router.push({
+        path: "/columnDetail",
+        query: {
+          columnId: columnId,
+        },
+      })
+    }
   },
 }
 </script>

@@ -9,6 +9,7 @@ import MyCollections from '../components/user/MyCollections'
 import Columns from '../components/column/Columns.vue'
 import AddColumn from '../components/column/AddColumn.vue'
 import UserInfoPage from '../components/user/UserInfoPage.vue'
+import ColumnDetail from '../components/column/ColumnDetail.vue'
 import { getToken } from '@/utils/auth'
 
 Vue.use(VueRouter)
@@ -124,7 +125,7 @@ const routes = [
         path: 'addColumns',
         meta: {
           breadcrumbShow: true,
-          constBreadcrumbItems: ['新建专栏'],
+          constBreadcrumbItems: ['专栏', '新建专栏'],
           toBreadcrumbItems: [
             {
               name: '首页',
@@ -134,15 +135,28 @@ const routes = [
               name: '板块',
               path: '/boards'
             },
-            
-            {
-              name: '专栏',
-              path: '/columns'
-            }
           ]
         },
         component: AddColumn
-      }
+      },
+      {
+        path: 'columnDetail',
+        meta: {
+          breadcrumbShow: true,
+          constBreadcrumbItems: ['专栏', '专栏详情'],
+          toBreadcrumbItems: [
+            {
+              name: '首页',
+              path: '/home'
+            },
+            {
+              name: '板块',
+              path: '/boards'
+            },
+          ]
+        },
+        component: ColumnDetail
+      },
     ]
   }
 ]
