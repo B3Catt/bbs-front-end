@@ -10,6 +10,7 @@ import Columns from '../components/column/Columns.vue'
 import AddColumn from '../components/column/AddColumn.vue'
 import UserInfoPage from '../components/user/UserInfoPage.vue'
 import ColumnDetail from '../components/column/ColumnDetail.vue'
+import AddFloor from '../components/floor/AddFloor.vue'
 import { getToken } from '@/utils/auth'
 
 Vue.use(VueRouter)
@@ -156,6 +157,24 @@ const routes = [
           ]
         },
         component: ColumnDetail
+      },
+      {
+        path: 'addFloor',
+        meta: {
+          breadcrumbShow: true,
+          constBreadcrumbItems: ['专栏', '专栏详情', '新建楼层'],
+          toBreadcrumbItems: [
+            {
+              name: '首页',
+              path: '/home'
+            },
+            {
+              name: '板块',
+              path: '/boards'
+            },
+          ]
+        },
+        component: AddFloor
       },
     ]
   }

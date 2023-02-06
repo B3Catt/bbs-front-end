@@ -107,13 +107,25 @@
       </el-pagination>
     </el-card>
     <!-- 查看专栏详情对话框 -->
-    <el-dialog
-      title="专栏详情"
-      :visible.sync="detailDialogVisible"
-      width="50%"
-    >
+    <el-dialog title="专栏详情" :visible.sync="detailDialogVisible" width="50%">
       <!-- 内容主体区 -->
-      {{ columnDetail }}
+      <div>
+        <header>
+          <h2>
+            <a>
+              {{ columnDetail.title }}
+            </a>
+          </h2>
+          <div>
+            发表于 <span>{{ columnDetail.createTime }}</span>  ·  
+            用户名 <span>{{ columnDetail.userName }}</span>  ·  
+            板块名 <span>{{ columnDetail.userName }}</span>
+          </div>
+          <div>
+          </div>
+        </header>
+        <div v-html="columnDetail.content" style="margin-top: 40px"></div>
+      </div>
       <!-- 底部区域 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="detailDialogVisible = false">关 闭</el-button>
@@ -123,6 +135,7 @@
 </template>
 
 <script>
+import { mavonEditor } from "mavon-editor"
 export default {
   data() {
     return {
@@ -235,6 +248,10 @@ export default {
       }
       // 保存数据
       this.columnDetail = res.data
+
+      const markdownIt = mavonEditor.getMarkdownIt()
+      // markdownIt.re
+      this.columnDetail.content = markdownIt.render(this.columnDetail.content)
       // 打开对话框
       this.detailDialogVisible = true
     },

@@ -12,26 +12,25 @@
       :default-active="activePath"
       router
     >
-      <!-- 1级菜单 -->
-      <el-submenu index="1">
-        <!-- 1级菜单的模板区 -->
+      <!-- 用户管理 -->
+      <el-menu-item index="/users">
         <template slot="title">
           <!-- 图表 -->
           <i class="el-icon-s-custom"></i>
           <!-- 文本 -->
           <span>用户管理</span>
         </template>
+      </el-menu-item>
 
-        <!-- 二级菜单项 -->
-        <el-menu-item index="/users">
-          <template slot="title">
-            <!-- 图表 -->
-            <i class="el-icon-menu"></i>
-            <!-- 文本 -->
-            <span>用户列表</span>
-          </template>
-        </el-menu-item>
-      </el-submenu>
+      <!-- 专栏管理 -->
+      <el-menu-item index="/allColumns">
+        <template>
+          <!-- 图表 -->
+          <i class="el-icon-folder-opened"></i>
+          <!-- 文本 -->
+          <span>专栏管理</span>
+        </template>
+      </el-menu-item>
 
       <!-- 1级菜单 -->
       <el-submenu index="2">
@@ -63,26 +62,15 @@
         </el-menu-item>
       </el-submenu>
 
-      <!-- 1级菜单 -->
-      <el-submenu index="3">
-        <!-- 1级菜单的模板区 -->
+      <!-- 板块管理 -->
+      <el-menu-item index="/boards">
         <template slot="title">
           <!-- 图表 -->
           <i class="el-icon-s-grid"></i>
           <!-- 文本 -->
           <span>板块管理</span>
         </template>
-
-        <!-- 二级菜单项 -->
-        <el-menu-item index="/boards">
-          <template slot="title">
-            <!-- 图表 -->
-            <i class="el-icon-menu"></i>
-            <!-- 文本 -->
-            <span>板块列表</span>
-          </template>
-        </el-menu-item>
-      </el-submenu>
+      </el-menu-item>
     </el-menu>
   </el-aside>
 </template>
@@ -114,7 +102,7 @@ export default {
   background-color: #fff0cd;
 
   .el-menu {
-    border-right : 0px;
+    border-right: 0px;
   }
 }
 

@@ -21,8 +21,19 @@
     <el-table :data="columnList" style="width: 100%" border stripe>
       <el-table-column type="index"> </el-table-column>
       <el-table-column prop="boardName" label="板块" width="180">
+        <template slot-scope="scope">
+          <div style="cursor: pointer" @click="getColumns(scope.row.boardId)">
+            {{ scope.row.boardName }}
+          </div>
+        </template>
       </el-table-column>
-      <el-table-column prop="title" label="标题"> </el-table-column>
+      <el-table-column prop="title" label="标题">
+        <template slot-scope="scope">
+          <div style="cursor: pointer" @click="columnDetail(scope.row.id)">
+            {{ scope.row.title }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="isPublish" label="是否发布" width="100">
         <template slot-scope="scope">
           {{ scope.row.isPublish ? "是" : "否" }}
@@ -38,7 +49,7 @@
           {{ scope.row.isAudit ? "是" : "否" }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="180">
+      <el-table-column label="操作" width="120">
         <template slot-scope="scope">
           <el-button
             type="primary"
@@ -46,7 +57,6 @@
             size="mini"
             @click="updateColumn(scope.row)"
           ></el-button>
-          <el-button type="primary" icon="el-icon-link" size="mini" @click="columnDetail(scope.row.id)"></el-button>
           <!-- 删除按钮 -->
           <el-popconfirm
             confirm-button-text="确定"
@@ -162,7 +172,16 @@ export default {
           columnId: columnId,
         },
       })
-    }
+    },
+    // 跳转到对应板块
+    getColumns(boardId) {
+      this.$router.push({
+        path: "/columns",
+        query: {
+          boardId: boardId,
+        },
+      })
+    },
   },
 }
 </script>

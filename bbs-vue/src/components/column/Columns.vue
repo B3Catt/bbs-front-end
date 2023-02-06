@@ -21,25 +21,33 @@
         <el-button type="primary" @click="addColumn()">新建专栏</el-button>
       </el-col>
     </el-row>
-    <!-- 板块列表区域 -->
+    <!-- 专栏列表区域 -->
     <el-table :data="columnList" style="width: 100%" border stripe>
       <el-table-column type="index"> </el-table-column>
-      <el-table-column prop="title" label="标题"> </el-table-column>
+      <el-table-column prop="title" label="标题">
+        <template slot-scope="scope">
+          <div style="cursor: pointer" @click="columnDetail(scope.row.id)">
+            {{ scope.row.title }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="userName" label="发布者">
         <template slot-scope="scope">
-          <div style="cursor: pointer;" @click="getUserInfo(scope.row.userId)">{{scope.row.userName}}</div>
+          <div style="cursor: pointer" @click="getUserInfo(scope.row.userId)">
+            {{ scope.row.userName }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="发布时间"> </el-table-column>
       <el-table-column prop="floorCount" label="楼层数"> </el-table-column>
       <el-table-column prop="viewCount" label="浏览量"> </el-table-column>
-      <el-table-column label="操作" width="120">
+      <el-table-column label="操作" width="65">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-link" size="mini" @click="columnDetail(scope.row.id)"></el-button>
           <el-button
             type="primary"
             icon="el-icon-star-on"
             size="mini"
+            @click="collect(scope.row.id)"
           ></el-button>
         </template>
       </el-table-column>
@@ -60,6 +68,7 @@
 
 <script>
 import request from "@/utils/request"
+import qs from "qs"
 export default {
   data() {
     return {
@@ -106,7 +115,7 @@ export default {
         path: "addColumns",
         query: {
           aId: 0,
-          boardId: this.queryInfo.boardId
+          boardId: this.queryInfo.boardId,
         },
       })
     },
@@ -127,7 +136,28 @@ export default {
           columnId: columnId,
         },
       })
-    }
+    },
+    // 收藏或取消收藏
+    collect(id) {
+      let params = qs.stringify({
+        columnId: id,
+      })
+      request.post("collection/add", params).then((res) => {
+        if (res.code !== 200) {
+          request.post("collection/cancel", params).then((res) => {
+            this.$message.success({
+              message: "取消收藏成功！",
+              center: true,
+            })
+          })
+          return
+        }
+        this.$message.success({
+          message: "收藏成功！",
+          center: true,
+        })
+      })
+    },
   },
 }
 </script>

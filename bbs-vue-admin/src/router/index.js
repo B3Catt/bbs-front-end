@@ -5,6 +5,7 @@ import Home from '../pages/Home.vue'
 import Welcome from '../components/Welcome.vue'
 import Users from '../components/user/Users.vue'
 import Columns from '../components/column/Columns.vue'
+import AllColumns from '../components/column/AllColumns.vue'
 import Floors from '../components/floor/Floors.vue'
 import Boards from '../components/board/Boards.vue'
 import { getToken } from '@/utils/auth'
@@ -19,6 +20,7 @@ const routes = [
       { path: '/welcome', component: Welcome },
       { path: '/users', component: Users},
       { path: '/columns', component: Columns },
+      { path: '/allColumns', component: AllColumns},
       { path: '/floors', component: Floors },
       { path: '/boards', component: Boards }
     ]

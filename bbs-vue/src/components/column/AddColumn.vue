@@ -1,11 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form
-      ref="form"
-      :model="form"
-      :rules="formRules"
-      label-width="90px"
-    >
+    <el-form ref="form" :model="form" :rules="formRules" label-width="90px">
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="文章标题" prop="title">
@@ -33,14 +28,19 @@
       </el-row>
     </el-form>
 
-    <el-row :gutter="20">
-      <el-col :span="12">
+    <el-row :gutter="50">
+      <el-col :span="22">
         <el-button type="primary" size="medium" @click="handleSubmit">{{
           aId ? "更新" : "发布"
         }}</el-button>
         <el-button v-if="!aId" type="info" @click="handleSave"
           >保存到草稿箱</el-button
         >
+      </el-col>
+      <el-col :span="2">
+        <el-button type="info" size="medium" @click="cancel">{{
+          "取消"
+        }}</el-button>
       </el-col>
     </el-row>
   </div>
@@ -56,7 +56,7 @@ export default {
         isComment: "1",
         isPublish: "0",
         content: "",
-        boardId: -1
+        boardId: -1,
       },
       aId: -1,
       // 这是表单的映射规则对象
@@ -76,13 +76,13 @@ export default {
   },
   created() {
     this.aId = parseInt(this.$route.query.aId)
-    this.boardId = this.$route.query.boardId
+    this.form.boardId = this.$route.query.boardId
     if (this.aId) {
-      this.getArticle()
+      this.getColumn()
     }
   },
   methods: {
-    getArticle() {
+    getColumn() {
       request
         .get(`column/${this.aId}`, {
           params: this.queryInfo,
@@ -107,23 +107,42 @@ export default {
         if (!this.aId) {
           this.form.isPublish = "1"
           request.post("column/add", this.form).then((response) => {
-            this.$message.success({
-              message: "专栏发布成功",
-              center: true,
-            })
-            this.$router.push({ path: "/columns" })
+            // 判断是否成功
+            if (response.code !== 200) {
+              return this.$message.error({
+                message: response.msg,
+                center: true,
+              })
+            } else {
+              this.$message.success({
+                message: "专栏发布成功",
+                center: true,
+              })
+              this.$router.push({ path: "/columns" })
+            }
           })
         } else {
           // 更新博客信息
           request.post("column/update", this.form).then((response) => {
-            this.$message.success({
-              message: "专栏更新成功",
-              center: true,
-            })
-            this.$router.push({ path: "/columns" })
+            // 判断是否成功
+            if (response.code !== 200) {
+              return this.$message.error({
+                message: response.msg,
+                center: true,
+              })
+            } else {
+              this.$message.success({
+                message: "专栏更新成功",
+                center: true,
+              })
+              this.$router.push({ path: "/columns" })
+            }
           })
         }
       })
+    },
+    cancel() {
+      this.$router.push({ path: "/columns" })
     },
   },
 }

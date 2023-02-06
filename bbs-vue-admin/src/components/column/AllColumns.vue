@@ -3,7 +3,7 @@
     <!-- 面包屑导航区 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+      <el-breadcrumb-item>专栏管理</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图区 -->
     <el-card>
@@ -11,27 +11,35 @@
       <el-row>
         <el-col :span="7">
           <el-input
-            placeholder="请输入用户昵称"
-            v-model="queryInfo.nickName"
+            placeholder="请输入专栏标题"
+            v-model="queryInfo.columnTitle"
             clearable
-            @clear="getUserList"
+            @clear="getColumnList"
           >
             <el-button
               slot="append"
               icon="el-icon-search"
-              @click="getUserList"
+              @click="getColumnList"
             ></el-button>
           </el-input>
         </el-col>
       </el-row>
-      <!-- 用户列表区域 -->
-      <el-table :data="userList" style="width: 100%" border stripe>
+      <!-- 专栏列表区域 -->
+      <el-table :data="columnList" style="width: 100%" border stripe>
         <el-table-column type="index"> </el-table-column>
-        <el-table-column prop="nickName" label="昵称" width="200">
+        <el-table-column prop="boardName" label="板块" width="180">
         </el-table-column>
-        <el-table-column prop="userName" label="用户名" width="200">
+        <el-table-column prop="userName" label="发布者" width="180">
         </el-table-column>
-        <el-table-column prop="userEmail" label="邮箱"> </el-table-column>
+        <el-table-column prop="title" label="标题"> </el-table-column>
+        <el-table-column prop="isTop" label="置顶" width="100">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.isTop"
+              @change="update(scope.row)"
+            ></el-switch>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
             <!-- 查看详情按钮 -->
@@ -39,7 +47,7 @@
               type="primary"
               icon="el-icon-search"
               size="mini"
-              @click="getUserInfo(scope.row.id)"
+              @click="getColumnInfo(scope.row.id)"
             ></el-button>
             <!-- 删除按钮 -->
             <el-popconfirm
@@ -48,7 +56,7 @@
               icon="el-icon-info"
               icon-color="red"
               title="确定删除该专栏吗？"
-              @comfirm="deleteUser(scope.row.id)"
+              @confirm="deleteColumn(scope.row.id)"
               class="ml-10"
             >
               <el-button
@@ -73,15 +81,30 @@
       >
       </el-pagination>
     </el-card>
-    <!-- 查看用户详情对话框 -->
+    <!-- 查看专栏详情对话框 -->
     <el-dialog
       title="专栏详情"
       :visible.sync="detailDialogVisible"
       width="50%"
-      @close="addDialogClose()"
     >
       <!-- 内容主体区 -->
-      {{ userDetail }}
+      <div>
+        <header>
+          <h2>
+            <a>
+              {{ columnDetail.title }}
+            </a>
+          </h2>
+          <div>
+            发表于 <span>{{ columnDetail.createTime }}</span>  ·  
+            用户名 <span>{{ columnDetail.userName }}</span>  ·  
+            板块名 <span>{{ columnDetail.userName }}</span>
+          </div>
+          <div>
+          </div>
+        </header>
+        <div v-html="columnDetail.content" style="margin-top: 40px"></div>
+      </div>
       <!-- 底部区域 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="detailDialogVisible = false">关 闭</el-button>
@@ -91,6 +114,7 @@
 </template>
 
 <script>
+import { mavonEditor } from "mavon-editor"
 export default {
   data() {
     return {
@@ -98,49 +122,66 @@ export default {
       queryInfo: {
         pageNum: 1,
         pageSize: 2,
-        nickName: "",
+        columnTitle: "",
       },
-      userList: [],
+      columnList: [],
       total: 0,
-      userDetail: {
-        nickName: '',
-        userSex: '',
-        userEmail: '',
-        userAge: 0,
+      columnDetail: {
+        userName: "",
+        boardName: "",
+        createTime: "",
+        title: "",
+        content: "",
+        floorCount: 0,
         viewCount: 0,
-        likeCount: 0,
         collectionCount: 0,
-        userSchool: '',
-        userMajor: '',
       },
       detailDialogVisible: false,
     }
   },
   created() {
-    this.getUserList()
+    this.getColumnList()
   },
   methods: {
-    async getUserList() {
-      const { data: res } = await this.$http.get("user", {
+    async getColumnList() {
+      const { data: res } = await this.$http.get("column/columnList", {
         params: this.queryInfo,
       })
       if (res.code !== 200) return this.$message.error(res.msg)
-      this.userList = res.data.rows
+      this.columnList = res.data.rows
+      // 将源数据中的字符串转为布尔值
+      this.columnList.map((column) => (column.isTop = !!+column.isTop))
       this.total = res.data.total
+    },
+    // 监听 column 状态的改变
+    async update(columnInfo) {
+      // 设置节点
+      var path = ""
+      if (!columnInfo.isTop) {
+        path = "/cancel"
+      }
+      // 得到结果
+      const { data: res } = await this.$http.post(
+        `column/top${path}/${columnInfo.id}`
+      )
+      if (res.code !== 200) {
+        columnInfo.isTop = !columnInfo.isTop
+        return this.$message.error(res.msg)
+      }
     },
     // 监听 pageSize 改变的事件
     handleSizeChange(newPageSize) {
       this.queryInfo.pageSize = newPageSize
-      this.getUserList()
+      this.getColumnList()
     },
     // 监听 pageNum 改变的事件
     handleCurrentChange(newPageNum) {
       this.queryInfo.pageNum = newPageNum
-      this.getUserList()
+      this.getColumnList()
     },
-    // 删除用户
-    async deleteUser(id) {
-      const { data: res } = await this.$http.delete(`user/${id}`)
+    // 删除专栏
+    async deleteColumn(id) {
+      const { data: res } = await this.$http.delete(`audit/column/${id}`)
       // 判断是否成功
       if (res.code !== 200) {
         return this.$message.error({
@@ -154,11 +195,10 @@ export default {
       })
       // 重新获取数据
       this.queryInfo.pageNum = 1
-      this.getUserList()
+      this.getColumnList()
     },
-    // 获取用户信息
-    async getUserInfo(id) {
-      const { data: res } = await this.$http.get(`user/${id}`)
+    async getColumnInfo(id) {
+      const { data: res } = await this.$http.get(`column/${id}`)
       // 判断是否成功
       if (res.code !== 200) {
         return this.$message.error({
@@ -167,7 +207,11 @@ export default {
         })
       }
       // 保存数据
-      this.userDetail = res.data
+      this.columnDetail = res.data
+
+      const markdownIt = mavonEditor.getMarkdownIt()
+      // markdownIt.re
+      this.columnDetail.content = markdownIt.render(this.columnDetail.content)
       // 打开对话框
       this.detailDialogVisible = true
     },
