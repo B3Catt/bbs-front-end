@@ -135,7 +135,12 @@ export default {
                 message: "专栏更新成功",
                 center: true,
               })
-              this.$router.push({ path: "/columns" })
+              this.$router.push({
+                path: "/columns",
+                query: {
+                  boardId: this.queryInfo.boardId,
+                },
+              })
             }
           })
         }

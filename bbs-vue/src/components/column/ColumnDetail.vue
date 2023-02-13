@@ -12,7 +12,7 @@
           </h2>
           <div>
             发表于 <span>{{ detailObj.createTime }}</span> •
-            {{ detailObj.viewCount }} 次围观 •
+            <span> {{ detailObj.viewCount }} </span>次围观 •
           </div>
           <div>
             <a :href="'#/columns?boardId=' + detailObj.boardId">{{
@@ -179,6 +179,11 @@ export default {
             this.floorList[i].content = markdownIt.render(
               this.floorList[i].content
             )
+            if (this.floorList[i].rootId !== -1) {
+              this.floorList[i].rootFloor.content = markdownIt.render(
+                this.floorList[i].rootFloor.content
+              )
+            }
           }
           this.total = res.data.total
         })
