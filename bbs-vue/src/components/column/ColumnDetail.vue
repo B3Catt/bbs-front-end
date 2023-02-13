@@ -240,10 +240,17 @@ export default {
       request.post("like/add", params).then((res) => {
         if (res.code !== 200) {
           request.post("like/cancel", params).then((res) => {
-            this.$message.success({
-              message: "取消点赞成功！",
-              center: true,
-            })
+            if (res.code === 200) {
+              this.$message.success({
+                message: "取消点赞成功！",
+                center: true,
+              })
+            } else {
+              this.$message.error({
+                message: res.msg,
+                center: true,
+              })
+            }
           })
           return
         }
@@ -261,10 +268,17 @@ export default {
       request.post("collection/add", params).then((res) => {
         if (res.code !== 200) {
           request.post("collection/cancel", params).then((res) => {
-            this.$message.success({
-              message: "取消收藏成功！",
-              center: true,
-            })
+            if (res.code === 200) {
+              this.$message.success({
+                message: "取消收藏成功！",
+                center: true,
+              })
+            } else {
+              this.$message.error({
+                message: res.msg,
+                center: true,
+              })
+            }
           })
           return
         }
